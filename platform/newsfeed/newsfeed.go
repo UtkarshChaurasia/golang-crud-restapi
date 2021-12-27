@@ -6,9 +6,30 @@ type Feed struct {
 	DB *sql.DB // pointer to a sql db
 }
 
-// func (feed *Feed) Get() []Item {
+func (feed *Feed) Get() []Item {
 
-// }
+	rows, _ := feed.DB.Query(`
+		SELECT * FROM newsfeed
+	`)
+
+	items := []Item{}
+
+	var id int
+	var content string
+
+	for rows.Next() {
+		rows.Scan(&id, &content)
+		newItem := Item{
+			ID:      id,
+			Content: content,
+		}
+
+		items = append(items, newItem)
+	}
+
+	return items
+
+}
 
 func (feed *Feed) Add(item Item) {
 	stmt, _ := feed.DB.Prepare(`
