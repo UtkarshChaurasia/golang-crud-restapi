@@ -8,22 +8,30 @@ type Feed struct {
 
 func (feed *Feed) Get() []Item {
 
+	// query statement stores fetched result in rows
 	rows, _ := feed.DB.Query(`
 		SELECT * FROM newsfeed
 	`)
 
+	// new slice of Item type to store the rows
 	items := []Item{}
 
 	var id int
 	var content string
 
+	// iterating through all rows
 	for rows.Next() {
+
+		// get id and content and store it in var id & var content
 		rows.Scan(&id, &content)
+
+		// create a new Item with id and content
 		newItem := Item{
 			ID:      id,
 			Content: content,
 		}
 
+		// append newItem to items slice
 		items = append(items, newItem)
 	}
 
